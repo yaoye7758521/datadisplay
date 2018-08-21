@@ -7,16 +7,74 @@
     <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../bootstrap/css/bootstrap-grid.css" rel="stylesheet">
     <link href="../../bootstrap/css/bootstrap-reboot.css" rel="stylesheet">
+    <style>
+        table, table tr th, table tr td {
+            border: 1px solid #0094ff;
+            color: wheat;
+        }
+
+        table {
+            width: 700px;
+            min-height: 25px;
+            line-height: 30px;
+            text-align: center;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="row">
-        <!-- <div id = "earth" class="col-md-12"></div>-->
-        <div class="col-md-12" id="earth" style="width: 60%; left: 40%;">
 
-        </div>
-    </div>
+<div id="earth" style="position:absolute; z-index:2;"></div>
+<div id="chart0" style="position:absolute; z-index:3;left:20px;top:20px;width:600px;
+height:150px;">
+    <h1 style="color:white">全球态势攻击演示</h1>
+</div>
+<div id="chart1" style="position:absolute; z-index:3;left:10px;top:150px;width:500px;
+height:500px;"></div>
+<div id="chart2" style="position:absolute; z-index:3;right:10px;top:50px;width:550px;
+height:400px;"></div>
+<div id="chart3" style="position:absolute; z-index:3;right:10px;bottom:10px;width:550px;
+height:400px;"></div>
+<div id="chart4" style="position:absolute; z-index:3;left:30px;bottom:30px;width:700px;
+height:150px;">
+
+
+    <table>
+        <tr>
+            <th>时间</th>
+            <th>源IP</th>
+            <th>源地址</th>
+            <th>目标IP</th>
+            <th>目标地址</th>
+            <th>攻击类型</th>
+        </tr>
+        <tr>
+            <td>2018/8/21 10:34:15</td>
+            <td>10.198.292.3</td>
+            <td>加利福尼亚</td>
+            <td>10.198.292.3</td>
+            <td>珠海</td>
+            <td>DDOS</td>
+        </tr>
+        <tr>
+            <td>2018/8/21 10:35:12</td>
+            <td>89.222.12.2</td>
+            <td>慕尼黑</td>
+            <td>10.198.292.3</td>
+            <td>郑州</td>
+            <td>UDP</td>
+        </tr>
+        <tr>
+            <td>2018/8/21 10:36:16</td>
+            <td>20.193.3.221</td>
+            <td>纽约</td>
+            <td>10.198.292.3</td>
+            <td>西安</td>
+            <td>SYN</td>
+        </tr>
+    </table>
+
 </div>
 
 
