@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="datadisplay:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="data-display-1.0-SNAPSHOT.war">
+      <element id="artifact" artifact-name="datadisplay:war exploded" />
+    </root>
+  </artifact>
+</component>
