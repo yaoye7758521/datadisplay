@@ -37,7 +37,6 @@ $.get('/data/flights.json', function (data) {
     var series = data.airlines.map(function (airline) {
         var airlineName = airline[0];
         var routes = routesGroupByAirline[airlineName];
-
         if (!routes) {
             return null;
         }
@@ -61,9 +60,10 @@ $.get('/data/flights.json', function (data) {
             },
             blendMode: 'lighter',
 
-            data: routes.map(function (item) {
-                return [airports[item[1]].coord, airports[item[2]].coord];
-            })
+            data: [[[0, -40], [0, 40]]]
+            /*routes.map(function (item) {
+             return [airports[item[1]].coord, airports[item[2]].coord];
+             })*/
         };
     }).filter(function (series) {
         return !!series;
@@ -338,6 +338,21 @@ $.get('/data/flights.json', function (data) {
     myChart1.setOption(option1)
     myChart2.setOption(option2)
     myChart3.setOption(option3)
+
+/*
+    var i = 1
+    setInterval(function () {
+
+        data1 = [[[i, 40], [-i, -40]]]
+        myChart.setOption({
+            series: [{
+                type: 'lines3D',
+                data: data1
+            }]
+        });
+        i += 5;
+    }, 1000);
+*/
 
 
 });
