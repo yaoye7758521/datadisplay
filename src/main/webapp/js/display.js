@@ -117,7 +117,7 @@ $.get('/data/flights.json', function (data) {
                 },
                 main: {
                     intensity: 0.1,
-                    shadow: false
+                    shadow: true
                 },
                 ambientCubemap: {
                     texture: '/data/lake.hdr',

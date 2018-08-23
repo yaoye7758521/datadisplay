@@ -1,38 +1,8 @@
 $(function () {
-    function adaptScreen() {
-        var a = window.innerWidth;
-        var b = window.innerHeight;
-        document.getElementById("background").style.width = a + "px";
-        document.getElementById("background").style.height = b + "px";
-    }
-
-    function randomData() {
-        return Math.round(Math.random() * 50000);
-    }
-
-    function getRandomProvincceDada() {
-        return [
-            {name: '北京', value: '100'}, {name: '天津', value: randomData()},
-            {name: '上海', value: randomData()}, {name: '重庆', value: randomData()},
-            {name: '河北', value: randomData()}, {name: '河南', value: randomData()},
-            {name: '云南', value: randomData()}, {name: '辽宁', value: randomData()},
-            {name: '黑龙江', value: randomData()}, {name: '湖南', value: randomData()},
-            {name: '安徽', value: randomData()}, {name: '山东', value: randomData()},
-            {name: '新疆', value: randomData()}, {name: '江苏', value: randomData()},
-            {name: '浙江', value: randomData()}, {name: '江西', value: randomData()},
-            {name: '湖北', value: randomData()}, {name: '广西', value: randomData()},
-            {name: '甘肃', value: randomData()}, {name: '山西', value: randomData()},
-            {name: '内蒙古', value: randomData()}, {name: '陕西', value: randomData()},
-            {name: '吉林', value: randomData()}, {name: '福建', value: randomData()},
-            {name: '贵州', value: randomData()}, {name: '广东', value: randomData()},
-            {name: '青海', value: randomData()}, {name: '西藏', value: randomData()},
-            {name: '四川', value: randomData()}, {name: '宁夏', value: randomData()},
-            {name: '海南', value: randomData()}, {name: '台湾', value: randomData()},
-            {name: '香港', value: randomData()}, {name: '澳门', value: randomData()}
-        ];
-    }
-
-    var chinaData = getRandomProvincceDada();
+    var chinaMap = echarts.init(document.getElementById('china'));
+    var chinaChart1 = echarts.init(document.getElementById('chart1'));
+    var chinaChart2 = echarts.init(document.getElementById('chart2'));
+    var chinaChart3 = echarts.init(document.getElementById('chart3'));
 
     var optionMap = {
         backgroundColor: '#1C1C1C',
@@ -46,8 +16,8 @@ $(function () {
         },
         //左侧小导航图标
         visualMap: {
-            min: 800,
-            max: 50000,
+            min: 0,
+            max: 5000,
             text: ['High', 'Low'],
             realtime: false,
             calculable: true,
@@ -65,7 +35,6 @@ $(function () {
             },
             show: false
         },
-
         //配置属性
         series: [{
             name: '数据',
@@ -81,7 +50,7 @@ $(function () {
                     show: true
                 },
             },
-            data: getRandomProvincceDada()
+            data: []
         }]
     }
 
@@ -119,10 +88,10 @@ $(function () {
                     width: 2
                 }
             },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
+            data: []
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: [],
             type: 'bar',
             itemStyle: {
                 normal: {
@@ -277,16 +246,92 @@ $(function () {
         }]
     };
 
-    var chinaMap = echarts.init(document.getElementById('china'));
-    var chinaChart1 = echarts.init(document.getElementById('chart1'));
-    var chinaChart2 = echarts.init(document.getElementById('chart2'));
-    var chinaChart3 = echarts.init(document.getElementById('chart3'));
+    function adaptScreen() {
+        var a = window.innerWidth;
+        var b = window.innerHeight;
+        window.document.getElementById("background").style.width = a + "px";
+        document.getElementById("background").style.height = b + "px";
+    }
+
+    function randomData() {
+        return Math.round(Math.random() * 50000);
+    }
 
     function iniChina() {
         chinaMap.setOption(optionMap);
         chinaChart1.setOption(optionChart1);
         chinaChart2.setOption(optionChart2);
         chinaChart3.setOption(optionChart3);
+    }
+
+    function getArrayItems(arr, num) {
+        var temp_array = new Array();
+        for (var index in arr) {
+            temp_array.push(arr[index]);
+        }
+        var return_array = new Array();
+        for (var i = 0; i < num; i++) {
+            if (temp_array.length > 0) {
+                var arrIndex = Math.floor(Math.random() * temp_array.length);
+                return_array[i] = temp_array[arrIndex];
+                temp_array.splice(arrIndex, 1);
+            } else {
+                break;
+            }
+        }
+        return return_array;
+    }
+
+    function getValueArray(sdata) {
+        var valueArray = new Array;
+        for (var i = 0; i < sdata.length; i++) {
+            valueArray.push(sdata[i].value)
+        }
+        return valueArray;
+    }
+
+    function getNameArray(sdata) {
+        var nameArray = new Array;
+        for (var i = 0; i < sdata.length; i++) {
+            nameArray.push(sdata[i].name)
+        }
+        return nameArray;
+    }
+
+    function updateChinaMap() {
+        $.ajax({
+            type: "get",
+            url: "/display/map/china",
+            async: true,
+            success: function (cdata) {
+                var data1 = getArrayItems(cdata, 8)
+                var data2 = getArrayItems(cdata, 8)
+                var data3 = getArrayItems(cdata, 8)
+                chinaMap.setOption({
+                    series: [{
+                        data: cdata
+                    }]
+                });
+                chinaChart1.setOption({
+                    yAxis: {data: getNameArray(data1)},
+                    series: [{
+                        data: getValueArray(data1)
+                    }]
+                });
+                chinaChart2.setOption({
+                    yAxis: {data: getNameArray(data2)},
+                    series: [{
+                        data: getValueArray(data2)
+                    }]
+                });
+                chinaChart3.setOption({
+                    yAxis: {data: getNameArray(data3)},
+                    series: [{
+                        data: getValueArray(data3)
+                    }]
+                });
+            }
+        });
     }
 
     function initable() {
@@ -308,7 +353,11 @@ $(function () {
 
     adaptScreen();
     iniChina();
-    initable();
+    updateChinaMap();
+    setInterval(function () {
+        updateChinaMap();
+    }, 2000);
+    //initable();
 
 
 })

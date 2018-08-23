@@ -8,9 +8,9 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:applicationContext-*</param-value>
     </context-param>
-<!--    <listener>
+    <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>-->
+    </listener>
     <servlet>
         <servlet-name>display</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
