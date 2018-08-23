@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.MapMapper">
+
+    <resultMap type="mapVo" id="mapVo">
+        <result column="AREA_NAME" property="name"/>
+        <result column="VALUE" property="value"/>
+    </resultMap>
+    <!-- 根据字段查询各省数额并排名 -->
+    <select id="showChinaMap" resultMap="mapVo">
+        select
+        case
+        t.area_name
+        when '河北省' then '河北'
+        when '青海省' then '青海'
+        when '甘肃省' then '甘肃'
+        when '山西省' then '山西'
+        when '安徽省' then '安徽'
+        when '山东省' then '山东'
+        when '新疆维吾尔自治区' then '新疆'
+        when '北京市' then '北京'
+        when '广西壮族自治区' then '广西'
+        when '湖北省' then '湖北'
+        when '陕西省' then '陕西'
+        when '四川省' then '四川'
+        when '新疆生产建设兵团' then '新疆'
+        when '贵州省' then '贵州'
+        when '云南省' then '云南'
+        when '宁夏回族自治区' then '宁夏'
+        when '海南省' then '海南'
+        when '重庆市' then '重庆'
+        when '河南省' then '河南'
+        when '广东省' then '广东'
+        when '天津市' then '天津'
+        when '江西省' then '江西'
+        when '内蒙古自治区' then '内蒙古'
+        when '福建省' then '福建'
+        when '上海市' then '上海'
+        when '吉林省' then '吉林'
+        when '西藏自治区' then '西藏'
+        when '吉林省' then '吉林'
+        when '江苏省' then '江苏'
+        when '湖南省' then '湖南'
+        when '浙江省' then '浙江'
+        when '辽宁省' then '辽宁'
+        when '黑龙江省' then '黑龙江'
+        end
+        as name
+        from base_area t where t.node_level = '1'
+    </select>
+
+
+</mapper>
