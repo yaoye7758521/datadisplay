@@ -1,4 +1,10 @@
 $(function () {
+    var rowNum = 3;
+    var barNum = 8;
+    var area = 'china';
+    var dzoom = 1.2;
+    var minNum = 0;
+    var maxNum = 5000;
     var chinaMap = echarts.init(document.getElementById('china'));
     var chinaChart1 = echarts.init(document.getElementById('chart1'));
     var chinaChart2 = echarts.init(document.getElementById('chart2'));
@@ -8,8 +14,10 @@ $(function () {
         backgroundColor: '#1C1C1C',
         title: {
             text: '全国地图大数据',
-            subtext: '',
-            x: 'center'
+            left: 'center',
+            textStyle: {
+                color: 'rgba(200,200,200,0.8)'
+            }
         },
         tooltip: {
             trigger: 'item'
@@ -22,7 +30,8 @@ $(function () {
             realtime: false,
             calculable: true,
             inRange: {
-                color: ['#4575b4',
+                color: [
+                    //'#4575b4',
                     '#74add1',
                     '#abd9e9',
                     '#e0f3f8',
@@ -31,7 +40,8 @@ $(function () {
                     '#fdae61',
                     '#f46d43',
                     '#d73027',
-                    '#a50026']
+                    //'#a50026'
+                ]
             },
             show: false
         },
@@ -40,15 +50,15 @@ $(function () {
             name: '数据',
             type: 'map',
             map: 'china',
-            zoom: 1.2,
-            roam: true,
+            zoom: dzoom,
+            roam: false,
             label: {
                 normal: {
                     show: true
                 },
                 emphasis: {
                     show: true
-                },
+                }
             },
             data: []
         }]
@@ -56,11 +66,11 @@ $(function () {
 
     optionChart1 = {
         title: {
-            text: "木马病毒数量",
+            text: "我国受到攻击的次数",
             left: 'center',
             textStyle: {
-                color: 'rgba(200,200,200,0.8)',
-            },
+                color: 'rgba(200,200,200,0.8)'
+            }
         },
         tooltip: {
             trigger: 'item'
@@ -80,7 +90,7 @@ $(function () {
             type: 'category',
             axisLabel: {
                 interval: 0,
-                rotate: 0,
+                rotate: 0
             },
             axisLine: {
                 lineStyle: {
@@ -93,6 +103,13 @@ $(function () {
         series: [{
             data: [],
             type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    color: 'rgba(220,220,220,0.8)'
+                }
+            },
             itemStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(
@@ -114,17 +131,17 @@ $(function () {
                         ]
                     )
                 }
-            },
+            }
         }]
     };
 
     optionChart2 = {
         title: {
-            text: "木马病毒数量",
+            text: "对我国进行攻击的次数",
             left: 'center',
             textStyle: {
-                color: 'rgba(200,200,200,0.8)',
-            },
+                color: 'rgba(200,200,200,0.8)'
+            }
         },
         tooltip: {
             trigger: 'item'
@@ -144,7 +161,7 @@ $(function () {
             type: 'category',
             axisLabel: {
                 interval: 0,
-                rotate: 0,
+                rotate: 0
             },
             axisLine: {
                 lineStyle: {
@@ -152,11 +169,18 @@ $(function () {
                     width: 2
                 }
             },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
+            data: []
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: [],
             type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    color: 'rgba(220,220,220,0.8)'
+                }
+            },
             itemStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(
@@ -184,11 +208,11 @@ $(function () {
 
     optionChart3 = {
         title: {
-            text: "木马病毒数量",
+            text: "活跃木马病毒的数量",
             left: 'center',
             textStyle: {
-                color: 'rgba(200,200,200,0.8)',
-            },
+                color: 'rgba(200,200,200,0.8)'
+            }
         },
         tooltip: {
             trigger: 'item'
@@ -208,7 +232,7 @@ $(function () {
             type: 'category',
             axisLabel: {
                 interval: 0,
-                rotate: 0,
+                rotate: 0
             },
             axisLine: {
                 lineStyle: {
@@ -216,11 +240,18 @@ $(function () {
                     width: 2
                 }
             },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
+            data: []
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: [],
             type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    color: 'rgba(220,220,220,0.8)'
+                }
+            },
             itemStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(
@@ -257,19 +288,44 @@ $(function () {
         return Math.round(Math.random() * 50000);
     }
 
+    function chinaToProvince(params) {
+        area = params.name;
+        minNum = 0;
+        maxNum = 1000;
+        dzoom = 0.8;
+        updateChinaMap();
+    }
+
+    function provinceToChina(params) {
+        area = 'china';
+        minNum = 0;
+        maxNum = 5000;
+        dzoom = 1.2;
+        updateChinaMap();
+    }
+
+    function changeMap(params) {
+        if (area === 'china') {
+            chinaToProvince(params);
+        } else {
+            provinceToChina(params);
+        }
+    }
+
     function iniChina() {
         chinaMap.setOption(optionMap);
+        chinaMap.on('click', changeMap);
         chinaChart1.setOption(optionChart1);
         chinaChart2.setOption(optionChart2);
         chinaChart3.setOption(optionChart3);
     }
 
     function getArrayItems(arr, num) {
-        var temp_array = new Array();
+        var temp_array = [];
         for (var index in arr) {
             temp_array.push(arr[index]);
         }
-        var return_array = new Array();
+        var return_array = [];
         for (var i = 0; i < num; i++) {
             if (temp_array.length > 0) {
                 var arrIndex = Math.floor(Math.random() * temp_array.length);
@@ -283,7 +339,7 @@ $(function () {
     }
 
     function getValueArray(sdata) {
-        var valueArray = new Array;
+        var valueArray = [];
         for (var i = 0; i < sdata.length; i++) {
             valueArray.push(sdata[i].value)
         }
@@ -291,7 +347,7 @@ $(function () {
     }
 
     function getNameArray(sdata) {
-        var nameArray = new Array;
+        var nameArray = [];
         for (var i = 0; i < sdata.length; i++) {
             nameArray.push(sdata[i].name)
         }
@@ -299,18 +355,29 @@ $(function () {
     }
 
     function updateChinaMap() {
+        var dataUrl;
+        if (area === 'china') {
+            dataUrl = '/display/map/china';
+        } else {
+            dataUrl = '/display/map/province?area=' + encodeURI(encodeURI(area));
+        }
         $.ajax({
             type: "get",
-            url: "/display/map/china",
+            url: dataUrl,
             async: true,
             success: function (cdata) {
-                var data1 = getArrayItems(cdata, 8)
-                var data2 = getArrayItems(cdata, 8)
-                var data3 = getArrayItems(cdata, 8)
+                var data1 = getArrayItems(cdata, barNum);
                 chinaMap.setOption({
-                    series: [{
-                        data: cdata
-                    }]
+                    visualMap: {
+                        min: minNum,
+                        max: maxNum
+                    },
+                    series:
+                        [{
+                            map: area,
+                            zoom: dzoom,
+                            data: cdata
+                        }]
                 });
                 chinaChart1.setOption({
                     yAxis: {data: getNameArray(data1)},
@@ -318,46 +385,76 @@ $(function () {
                         data: getValueArray(data1)
                     }]
                 });
+            }
+        });
+    }
+
+    function updateChinaChart2() {
+        $.ajax({
+            type: "get",
+            url: '/display/map/chart2?barNum=' + barNum,
+            async: true,
+            success: function (cdata) {
                 chinaChart2.setOption({
-                    yAxis: {data: getNameArray(data2)},
+                    yAxis: {data: getNameArray(cdata)},
                     series: [{
-                        data: getValueArray(data2)
-                    }]
-                });
-                chinaChart3.setOption({
-                    yAxis: {data: getNameArray(data3)},
-                    series: [{
-                        data: getValueArray(data3)
+                        data: getValueArray(cdata)
                     }]
                 });
             }
         });
     }
 
-    function initable() {
-        $('#table1').DataTable({
-            "ordering": false,
-            "paging": false,
-            "searching": false,
-            "ajax": "...............",
-            "columns": [
-                {"data": "时间"},
-                {"srcIP": "源IP"},
-                {"srcLoc": "源地址"},
-                {"disIP": "目的IP"},
-                {"disLoc": "目的地址"},
-                {"type": "攻击类型"}
-            ]
+    function updateChinaChart3() {
+        $.ajax({
+            type: "get",
+            url: '/display/map/chart3?barNum=' + barNum,
+            async: true,
+            success: function (cdata) {
+                chinaChart3.setOption({
+                    yAxis: {data: getNameArray(cdata)},
+                    series: [{
+                        data: getValueArray(cdata)
+                    }]
+                });
+            }
         });
+    }
+
+    function updateTable() {
+        $("#cityTable").empty();
+        var dataUrl = '/display/map/city?rowNum=' + rowNum;
+        $.ajax({
+            type: "get",
+            url: dataUrl,
+            async: true,
+            success: function (cdata) {
+                $('#cityTable').append('<tr><th>时间</th><th>源IP</th><th>源地址</th>' +
+                    '<th>目标IP</th><th>目标地址</th><th>攻击类型</th></tr>')
+                for (var i = 0; i < cdata.length; i++) {
+                    $('#cityTable').append('<tr><th>' + cdata[i].date + '</th><th>' +
+                        cdata[i].srcIP + '</th><th>' + cdata[i].srcAdd + '</th>' +
+                        '<th>' + cdata[i].disIP + '</th><th>' + cdata[i].disAdd +
+                        '</th><th>' + cdata[i].type + '</th></tr>')
+                }
+            }
+        });
+
     }
 
     adaptScreen();
     iniChina();
     updateChinaMap();
+    updateTable();
+    updateChinaChart2();
+    updateChinaChart3();
+
     setInterval(function () {
         updateChinaMap();
+        updateTable();
+        updateChinaChart2();
+        updateChinaChart3();
     }, 2000);
-    //initable();
 
 
 })

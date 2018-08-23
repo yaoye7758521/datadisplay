@@ -7,24 +7,38 @@
     <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="../../bootstrap/css/bootstrap-grid.css" rel="stylesheet">
     <link href="../../bootstrap/css/bootstrap-reboot.css" rel="stylesheet">
-    <link href="../../table/jquery.dataTables.css" rel="stylesheet">
+   <!-- <link href="../../table/jquery.dataTables.css" rel="stylesheet">-->
+    <style>
+        table, table tr th, table tr td {
+            border: 1px solid #0094ff;
+            color: wheat;
+        }
+
+        table {
+            width: 700px;
+            min-height: 25px;
+            line-height: 30px;
+            text-align: center;
+            border-collapse: collapse;
+        }
+    </style>
 </head>
 <body>
 
 <div id="chart0" style="position:absolute; z-index:4;left:50px;top:50px;width:600px;
 height:150px;">
-    <h1 style="color:gainsboro">全球态势攻击演示</h1>
+    <h1 style="color:gainsboro">全国态势攻击演示</h1>
 </div>
 
 <div id="background" style="position:absolute;background-color:#1C1C1C; z-index:2"></div>
 
 <div id="china" style="position:absolute; z-index:3;left:100px;top:100px;width:1100px;height:800px;"></div>
-
-<div id="chart1" style="position:absolute; z-index:3;right:100px;top:30px;width:500px;height:330px;"></div>
-<div id="chart2" style="position:absolute; z-index:3;right:100px;top:370px;width:500px;height:330px;"></div>
-<div id="chart3" style="position:absolute; z-index:3;right:100px;top:680px;width:500px;height:330px;"></div>
-<div style="position:absolute; z-index:4;left:50px;top:900px;width:600px;height:150px;">
-    <table id="table1" class="display"></table>
+<!--<div id="province" style="position:absolute; z-index:3;left:100px;top:100px;width:1100px;height:800px;"></div>-->
+<div id="chart1" style="position:absolute; z-index:3;right:50px;top:30px;width:550px;height:330px;"></div>
+<div id="chart2" style="position:absolute; z-index:3;right:50px;top:370px;width:550px;height:330px;"></div>
+<div id="chart3" style="position:absolute; z-index:3;right:50px;top:680px;width:550px;height:330px;"></div>
+<div style="position:absolute; z-index:3;left:50px;bottom:50px;width:700px;height:150px;">
+    <table id="cityTable"></table>
 </div>
 
 
@@ -33,7 +47,7 @@ height:150px;">
 <script src="../../echarts/echarts-gl.min.js"></script>
 <script src="../../map/china.js"></script>
 <script src="../../map/china-contour.js"></script>
-<script src="../../table/jquery.dataTables.js"></script>
+<!--<script src="../../table/jquery.dataTables.js"></script>-->
 <script src="../../map/chinaprovince.js"></script>
 <script src="../../js/display2.js"></script>
 

@@ -1,5 +1,6 @@
 package mapper;
 
+import pojo.CitysVo;
 import pojo.MapVo;
 
 import java.util.List;
@@ -10,4 +11,13 @@ import java.util.List;
 
 public interface MapMapper {
     List<MapVo> showChinaMap();
+
+    List<MapVo> showProvinceMap(String provinceName);
+
+    List<MapVo> updateChinaChart2(int barNum);
+
+    List<String > getChinaCity(int rowNum);
+
+    List<String> getForeignCity(int rowNum);
+
 }

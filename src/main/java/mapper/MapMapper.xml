@@ -51,5 +51,34 @@
         from base_area t where t.node_level = '1'
     </select>
 
+    <select id="showProvinceMap" parameterType="String" resultMap="mapVo">
+        SELECT DISTINCT(c.AREA_NAME) from base_area_cnt a
+        LEFT JOIN base_area b on a.PROVINCE_ID = b.AREA_ID
+        LEFT JOIN base_area c on a.CITY_ID = c.AREA_ID
+        WHERE b.AREA_NAME LIKE #{value}
+    </select>
+
+    <select id="updateChinaChart2" parameterType="int" resultMap="mapVo">
+        SELECT DISTINCT(country) AS AREA_NAME
+        FROM city_cn
+        WHERE country != '中国'
+        ORDER BY rand() LIMIT #{value};
+    </select>
+
+    <!--CONCAT(country,' ',IFNULL(state, ''),' ',city)-->
+    <select id="getChinaCity" parameterType="int" resultType="String">
+        SELECT city AS srcAdd
+        FROM city_cn
+        WHERE country = '中国'
+        ORDER BY rand() LIMIT #{value};
+    </select>
+
+    <select id="getForeignCity" parameterType="int" resultType="String">
+        SELECT city AS srcAdd
+        FROM city_cn
+        WHERE country != '中国'
+        ORDER BY rand() LIMIT #{value};
+    </select>
+
 
 </mapper>

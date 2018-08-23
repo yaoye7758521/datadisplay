@@ -2,6 +2,11 @@
  * Created by yaoye on 2018/8/20.
  */
 $.get('/data/flights.json', function (data) {
+    var rowNum = 3;
+    var barNum = 8;
+    var myChart1 = echarts.init(document.getElementById('chart1'));
+    var myChart2 = echarts.init(document.getElementById('chart2'));
+    var myChart3 = echarts.init(document.getElementById('chart3'));
     var a = window.innerWidth;
     var b = window.innerHeight;
     document.getElementById("earth").style.width = a + "px";
@@ -92,7 +97,7 @@ $.get('/data/flights.json', function (data) {
          },*/
         globe: {
 
-            globeRadius: 70,
+            globeRadius: 68,
             environment: '/data/starfield.jpg',
             baseTexture: '/data/world.topo.bathy.200401.jpg',
             heightTexture: '/data/bathymetry_bw_composite_4k.jpg',
@@ -142,13 +147,9 @@ $.get('/data/flights.json', function (data) {
         })
     });
 
-
-    var myChart1 = echarts.init(document.getElementById('chart1'));
-    var myChart2 = echarts.init(document.getElementById('chart2'));
-    var myChart3 = echarts.init(document.getElementById('chart3'));
     option1 = {
         title: {
-            text: "发起攻击城市",
+            text: "我国受到攻击的次数",
             left: 'center',
             textStyle: {
                 color: 'rgba(200,200,200,0.8)',
@@ -179,74 +180,18 @@ $.get('/data/flights.json', function (data) {
                     color: 'rgba(200,200,200,0.8)',
                 }
             },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
+            data: []
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: [],
             type: 'bar',
-            itemStyle: {
+            label: {
                 normal: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            {offset: 0, color: 'rgba(80,141,255,0.7)'},
-                            {offset: 0.5, color: 'rgba(56,155,255,0.5)'},
-                            {offset: 1, color: 'rgba(38,197,254,0.1)'}
-                        ]
-                    )
-                },
-                emphasis: {
-                    color: new echarts.graphic.LinearGradient(
-                        0, 0, 0, 1,
-                        [
-                            {offset: 0, color: '#2378f7'},
-                            {offset: 0.7, color: '#2378f7'},
-                            {offset: 1, color: '#83bff6'}
-                        ]
-                    )
+                    show: true,
+                    position: 'top',
+                    color: 'rgba(220,220,220,0.8)'
                 }
             },
-        }]
-    };
-    option2 = {
-        title: {
-            text: "受到攻击城市",
-            left: 'center',
-            textStyle: {
-                color: 'rgba(200,200,200,0.8)',
-            },
-        },
-        tooltip: {
-            trigger: 'item'
-        },
-        calculable: true,
-        yAxis: {
-            type: 'value',
-            axisLine: {
-                lineStyle: {
-                    color: 'rgba(200,200,200,0.8)',
-                    width: 2
-                }
-            },
-            splitLine: {show: false}
-        },
-        xAxis: {
-            type: 'category',
-            axisLabel: {
-                interval: 0,
-                rotate: 0,
-            },
-            axisLine: {
-                lineStyle: {
-                    color: 'rgba(200,200,200,0.8)',
-                    width: 2
-                }
-            },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
-        },
-        series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
-            type: 'bar',
             itemStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(
@@ -271,10 +216,80 @@ $.get('/data/flights.json', function (data) {
             },
         }]
     };
+    option2 = {
+        title: {
+            text: "对我国进行攻击的次数",
+            left: 'center',
+            textStyle: {
+                color: 'rgba(200,200,200,0.8)',
+            },
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        calculable: true,
+        yAxis: {
+            type: 'value',
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(200,200,200,0.8)',
+                    width: 2
+                }
+            },
+            splitLine: {show: false}
+        },
+        xAxis: {
+            type: 'category',
+            axisLabel: {
+                interval: 'auto',
+                rotate: 0,
+            },
+            axisLine: {
+                lineStyle: {
+                    color: 'rgba(200,200,200,0.8)',
+                    width: 2
+                }
+            },
+            data: []
+        },
+        series: [{
+            data: [],
+            type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'top',
+                    color: 'rgba(220,220,220,0.8)'
+                }
+            },
+            itemStyle: {
+                normal: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: 'rgba(80,141,255,0.7)'},
+                            {offset: 0.5, color: 'rgba(56,155,255,0.5)'},
+                            {offset: 1, color: 'rgba(38,197,254,0.1)'}
+                        ]
+                    )
+                },
+                emphasis: {
+                    color: new echarts.graphic.LinearGradient(
+                        0, 0, 0, 1,
+                        [
+                            {offset: 0, color: '#2378f7'},
+                            {offset: 0.7, color: '#2378f7'},
+                            {offset: 1, color: '#83bff6'}
+                        ]
+                    )
+                }
+            },
+        }]
+    };
 
     option3 = {
         title: {
-            text: "木马病毒数量",
+            text: "活跃木马病毒的数量",
             left: 'center',
             textStyle: {
                 color: 'rgba(200,200,200,0.8)',
@@ -306,11 +321,18 @@ $.get('/data/flights.json', function (data) {
                     width: 2
                 }
             },
-            data: ['北京', '上海', '深圳', '广州', '杭州', '成都', '香港']
+            data: []
         },
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: [],
             type: 'bar',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'right',
+                    color: 'rgba(220,220,220,0.8)'
+                }
+            },
             itemStyle: {
                 normal: {
                     color: new echarts.graphic.LinearGradient(
@@ -335,24 +357,132 @@ $.get('/data/flights.json', function (data) {
             },
         }]
     };
-    myChart1.setOption(option1)
-    myChart2.setOption(option2)
-    myChart3.setOption(option3)
 
-    /*
-        var i = 1
-        setInterval(function () {
 
-            data1 = [[[i, 40], [-i, -40]]]
-            myChart.setOption({
-                series: [{
-                    type: 'lines3D',
-                    data: data1
-                }]
-            });
-            i += 5;
-        }, 1000);
-    */
+    function getArrayItems(arr, num) {
+        var temp_array = [];
+        for (var index in arr) {
+            temp_array.push(arr[index]);
+        }
+        var return_array = [];
+        for (var i = 0; i < num; i++) {
+            if (temp_array.length > 0) {
+                var arrIndex = Math.floor(Math.random() * temp_array.length);
+                return_array[i] = temp_array[arrIndex];
+                temp_array.splice(arrIndex, 1);
+            } else {
+                break;
+            }
+        }
+        return return_array;
+    }
+
+    function getValueArray(sdata) {
+        var valueArray = [];
+        for (var i = 0; i < sdata.length; i++) {
+            valueArray.push(sdata[i].value)
+        }
+        return valueArray;
+    }
+
+    function getNameArray(sdata) {
+        var nameArray = [];
+        for (var i = 0; i < sdata.length; i++) {
+            nameArray.push(sdata[i].name)
+        }
+        return nameArray;
+    }
+
+    function updatechart1() {
+        var dataUrl = '/display/map/china';
+        $.ajax({
+            type: "get",
+            url: dataUrl,
+            async: true,
+            success: function (cdata) {
+                var data1 = getArrayItems(cdata, barNum);
+                myChart1.setOption({
+                    xAxis: {data: getNameArray(data1)},
+                    series: [{
+                        data: getValueArray(data1)
+                    }]
+                });
+            }
+        });
+    }
+
+    function updatechart2() {
+        $.ajax({
+            type: "get",
+            url: '/display/map/chart2?barNum=' + barNum,
+            async: true,
+            success: function (cdata) {
+                myChart2.setOption({
+                    xAxis: {data: getNameArray(cdata)},
+                    series: [{
+                        data: getValueArray(cdata)
+                    }]
+                });
+            }
+        });
+    }
+
+    function updatechart3() {
+        $.ajax({
+            type: "get",
+            url: '/display/map/chart3?barNum=' + barNum,
+            async: true,
+            success: function (cdata) {
+                myChart3.setOption({
+                    yAxis: {data: getNameArray(cdata)},
+                    series: [{
+                        data: getValueArray(cdata)
+                    }]
+                });
+            }
+        });
+    }
+
+
+    function inimap() {
+        myChart1.setOption(option1);
+        myChart2.setOption(option2);
+        myChart3.setOption(option3);
+    }
+
+    function updateTable() {
+        $("#cityTable").empty();
+        var dataUrl = '/display/map/city?rowNum=' + rowNum;
+        $.ajax({
+            type: "get",
+            url: dataUrl,
+            async: true,
+            success: function (cdata) {
+                $('#cityTable').append('<tr><th>时间</th><th>源IP</th><th>源地址</th>' +
+                    '<th>目标IP</th><th>目标地址</th><th>攻击类型</th></tr>')
+                for (var i = 0; i < cdata.length; i++) {
+                    $('#cityTable').append('<tr><th>' + cdata[i].date + '</th><th>' +
+                        cdata[i].srcIP + '</th><th>' + cdata[i].srcAdd + '</th>' +
+                        '<th>' + cdata[i].disIP + '</th><th>' + cdata[i].disAdd +
+                        '</th><th>' + cdata[i].type + '</th></tr>')
+                }
+            }
+        });
+
+    }
+
+    inimap();
+    updateTable();
+    updatechart1();
+    updatechart2();
+    updatechart3();
+
+    setInterval(function () {
+        updateTable();
+        updatechart1();
+        updatechart2();
+        updatechart3();
+    }, 2000);
 
 
 });
