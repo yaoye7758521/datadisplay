@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pojo.CatterVo;
 import pojo.CitysVo;
 import pojo.MapVo;
 import service.MapService;
@@ -38,20 +39,32 @@ public class MapController {
 
     @RequestMapping("chart2")
     @ResponseBody
-    public List<MapVo> updateChinaChart2(int barNum){
+    public List<MapVo> updateChinaChart2(int barNum) {
         return mapService.updateChinaChart2(barNum);
     }
 
     @RequestMapping("chart3")
     @ResponseBody
-    public List<MapVo> updateChinaChart3(int barNum){
+    public List<MapVo> updateChinaChart3(int barNum) {
         return mapService.updateChinaChart3(barNum);
     }
-
 
     @RequestMapping("city")
     @ResponseBody
     public List<CitysVo> getCityList(int rowNum) {
         return mapService.getCityInfo(rowNum);
+    }
+
+    @RequestMapping("scatterChina")
+    @ResponseBody
+    public List<CatterVo> getScatter(int maxScaNum, int minScaNum) {
+        return mapService.getScatter(maxScaNum, minScaNum);
+    }
+
+    @RequestMapping("scatterProvince")
+    @ResponseBody
+    public List<CatterVo> getProvinceScatter(String province) throws UnsupportedEncodingException {
+        String username = URLDecoder.decode(province, "UTF-8");
+        return mapService.getProvinceScatter(username);
     }
 }

@@ -8,6 +8,13 @@
         <result column="AREA_NAME" property="name"/>
         <result column="VALUE" property="value"/>
     </resultMap>
+
+    <resultMap type="catterVo" id="catterVo">
+        <result column="AREA_NAME" property="name"/>
+        <result column="LAT" property="lat"/>
+        <result column="LNG" property="lng"/>
+    </resultMap>
+
     <!-- 根据字段查询各省数额并排名 -->
     <select id="showChinaMap" resultMap="mapVo">
         select
@@ -58,6 +65,14 @@
         WHERE b.AREA_NAME LIKE #{value}
     </select>
 
+    <select id="getProvinceScatter" parameterType="String" resultMap="catterVo">
+        SELECT DISTINCT(c.AREA_NAME),d.lng,d.lat from base_area_cnt a
+        LEFT JOIN base_area b on a.PROVINCE_ID = b.AREA_ID
+        LEFT JOIN base_area c on a.CITY_ID = c.AREA_ID
+				LEFT JOIN sh_area d on c.AREA_NAME = d.`name`
+        WHERE b.AREA_NAME LIKE #{value}
+    </select>
+
     <select id="updateChinaChart2" parameterType="int" resultMap="mapVo">
         SELECT DISTINCT(country) AS AREA_NAME
         FROM city_cn
@@ -77,6 +92,12 @@
         SELECT city AS srcAdd
         FROM city_cn
         WHERE country != '中国'
+        ORDER BY rand() LIMIT #{value};
+    </select>
+
+    <select id="getScatter" parameterType="int" resultMap="catterVo">
+        SELECT t.`name`,t.lat,t.lng from sh_area t
+        where t.`level` = '2'
         ORDER BY rand() LIMIT #{value};
     </select>
 

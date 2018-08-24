@@ -3,6 +3,7 @@ package service;
 import mapper.MapMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pojo.CatterVo;
 import pojo.CitysVo;
 import pojo.MapVo;
 
@@ -98,6 +99,36 @@ public class MapService implements MapServiceInterface {
             citysVos.add(citysVo);
         }
         return citysVos;
+    }
+
+    @Override
+    public List<CatterVo> getScatter(int maxScaNum, int minScaNum) {
+        int max = 2000;
+        int min = 0;
+        List<CatterVo> scatter = mapMapper.getScatter(getRandomNum(maxScaNum, minScaNum));
+        for (int i = 0; i < scatter.size(); i++) {
+            if (scatter.get(i) == null) {
+                scatter.remove(i);
+                continue;
+            }
+            scatter.get(i).setValue(getRandomNum(max, min));
+        }
+        return scatter;
+    }
+
+    @Override
+    public List<CatterVo> getProvinceScatter(String province) {
+        int max = 2000;
+        int min = 0;
+        List<CatterVo> provinceScatter = mapMapper.getProvinceScatter("%" + province + "%");
+        for (int i = 0; i < provinceScatter.size(); i++) {
+            if (provinceScatter.get(i) == null) {
+                provinceScatter.remove(i);
+                continue;
+            }
+            provinceScatter.get(i).setValue(getRandomNum(max, min));
+        }
+        return provinceScatter;
     }
 
     private Integer getRandomNum(Integer max, Integer min) {

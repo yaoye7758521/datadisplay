@@ -1,10 +1,14 @@
 $(function () {
+    setTimeout("pause()", 1000);
+    var maxScaNum = 50;
+    var minScaNum = 30;
     var rowNum = 3;
     var barNum = 8;
     var area = 'china';
     var dzoom = 1.2;
     var minNum = 0;
     var maxNum = 5000;
+    var scatterMax = 2000;
     var chinaMap = echarts.init(document.getElementById('china'));
     var chinaChart1 = echarts.init(document.getElementById('chart1'));
     var chinaChart2 = echarts.init(document.getElementById('chart2'));
@@ -23,48 +27,155 @@ $(function () {
             trigger: 'item'
         },
         //左侧小导航图标
-        visualMap: {
-            min: 0,
-            max: 5000,
+        visualMap: [{
+            min: minNum,
+            max: maxNum,
             text: ['High', 'Low'],
             realtime: false,
             calculable: true,
+            seriesIndex: 0,
             inRange: {
                 color: [
-                    //'#4575b4',
+                    '#4575b4',
                     '#74add1',
                     '#abd9e9',
-                    '#e0f3f8',
-                    '#ffffbf',
-                    '#fee090',
-                    '#fdae61',
-                    '#f46d43',
-                    '#d73027',
-                    //'#a50026'
+                    /*'#e0f3f8',
+                     '#ffffbf',
+                     '#fee090',
+                     '#fdae61',
+                     '#f46d43',
+                     '#d73027',
+                     '#a50026'*/
+                    /*'rgba(100, 100, 120, 0.8)',
+                     'rgba(208, 208, 228, 0.8)'*/
                 ]
             },
             show: false
         },
-        //配置属性
-        series: [{
-            name: '数据',
-            type: 'map',
-            map: 'china',
-            zoom: dzoom,
-            roam: false,
-            label: {
-                normal: {
-                    show: true
+            {
+                min: 0,
+                max: 2000,
+                text: ['High', 'Low'],
+                realtime: false,
+                calculable: true,
+                seriesIndex: 1,
+                inRange: {
+                    color: [
+                        /* '#4575b4',
+                         '#74add1',
+                         '#abd9e9',
+                         '#e0f3f8',
+                         '#ffffbf',
+                         '#fee090',
+                         '#fdae61',
+                         '#f46d43',
+                         '#d73027',
+                         '#a50026'*/
+                        'rgba(255, 255, 255, 0.6)',
+                        'rgba(255, 200, 200, 0.8)'
+                    ]
                 },
+                show: false
+            },
+            {
+                min: 0,
+                max: 2000,
+                text: ['High', 'Low'],
+                realtime: false,
+                calculable: true,
+                seriesIndex: 2,
+                inRange: {
+                    color: [
+                        /*'#4575b4',
+                         '#74add1',
+                         '#abd9e9',
+                         '#e0f3f8',*/
+                        'rgba(255, 200, 200, 0.8)',
+                        'rgba(255, 0, 0, 1)'
+                    ]
+                },
+                show: false
+            }],
+        geo: {
+            map: area,
+            zoom: dzoom,
+            label: {
                 emphasis: {
                     show: true
                 }
             },
-            data: []
-        }]
+            roam: false,
+
+        },
+        //配置属性
+        series: [
+
+            {
+                id: 'map',
+                name: '地区',
+                type: 'map',
+                //map: area,
+                //zoom: dzoom,
+                geoIndex: 0,
+                roam: false,
+                label: {
+                    normal: {
+                        show: true
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                data: []
+            },
+            {
+                id: 'scatter',
+                name: '被攻击',
+                type: 'scatter',
+                symbol: 'pin',
+                coordinateSystem: 'geo',
+                symbolSize: function (val) {
+                    return val[2] / 200;
+                },
+
+                itemStyle: {
+                    normal: {
+                        color: '#FF4040',
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel: 1,
+                data: []
+            },
+            {
+                id: 'effectScatter',
+                name: '被攻击',
+                type: 'effectScatter',
+                symbol: 'pin',
+                coordinateSystem: 'geo',
+                showEffectOn: 'render',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
+                symbolSize: function (val) {
+                    return val[2] / 100;
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#FF4040',
+                        shadowBlur: 10,
+                        shadowColor: '#333'
+                    }
+                },
+                zlevel: 2,
+                data: []
+            },
+        ]
     }
 
-    optionChart1 = {
+    var optionChart1 = {
         title: {
             text: "我国受到攻击的次数",
             left: 'center',
@@ -135,7 +246,7 @@ $(function () {
         }]
     };
 
-    optionChart2 = {
+    var optionChart2 = {
         title: {
             text: "对我国进行攻击的次数",
             left: 'center',
@@ -206,7 +317,7 @@ $(function () {
         }]
     };
 
-    optionChart3 = {
+    var optionChart3 = {
         title: {
             text: "活跃木马病毒的数量",
             left: 'center',
@@ -294,6 +405,7 @@ $(function () {
         maxNum = 1000;
         dzoom = 0.8;
         updateChinaMap();
+        updateScatter();
     }
 
     function provinceToChina(params) {
@@ -302,6 +414,8 @@ $(function () {
         maxNum = 5000;
         dzoom = 1.2;
         updateChinaMap();
+        pause()
+        updateScatter();
     }
 
     function changeMap(params) {
@@ -354,6 +468,38 @@ $(function () {
         return nameArray;
     }
 
+    function paseScatterForme(data) {
+        var scatterArray = [];
+        for (var i = 0; i < data.length; i++) {
+            var Obj = {}
+            scatterArray.push({
+                name: data[i].name,
+                value: [data[i].lng, data[i].lat, data[i].value]
+            });
+        }
+        return scatterArray;
+    }
+
+    function getScatterData(data) {
+        var gdaga = [];
+        for (i = 0; i < data.length; i++) {
+            if (Number(data[i].value[2]) > scatterMax * 0.9) {
+                gdaga.push(data[i]);
+            }
+        }
+        return gdaga;
+    }
+
+    function getEffectScatterData(data) {
+        var gdaga = [];
+        for (i = 0; i < data.length; i++) {
+            if (Number(data[i].value[2]) < scatterMax * 0.9) {
+                gdaga.push(data[i]);
+            }
+        }
+        return gdaga;
+    }
+
     function updateChinaMap() {
         var dataUrl;
         if (area === 'china') {
@@ -372,18 +518,50 @@ $(function () {
                         min: minNum,
                         max: maxNum
                     },
-                    series:
-                        [{
-                            map: area,
-                            zoom: dzoom,
-                            data: cdata
-                        }]
+                    geo: {
+                        map: area,
+                    },
+                    series: [{
+                        //map: area,
+                        id: 'map',
+                        zoom: dzoom,
+                        data: cdata
+                    }]
                 });
                 chinaChart1.setOption({
                     yAxis: {data: getNameArray(data1)},
                     series: [{
                         data: getValueArray(data1)
                     }]
+                });
+            }
+        });
+    }
+
+    function updateScatter() {
+        var dataUrl;
+        if (area === 'china') {
+            dataUrl = '/display/map/scatterChina?maxScaNum=' + maxScaNum + '&minScaNum=' + minScaNum;
+        } else {
+            dataUrl = '/display/map/scatterProvince?province=' + encodeURI(encodeURI(area));
+        }
+        $.ajax({
+            type: "get",
+            url: dataUrl,
+            async: true,
+            success: function (cdata) {
+                var data = paseScatterForme(cdata);
+                chinaMap.setOption({
+                    series: [
+                        {
+                            id: 'scatter',
+                            data: getScatterData(data)
+                        },
+                        {
+                            id: 'effectScatter',
+                            data: getEffectScatterData(data)
+                        }
+                    ]
                 });
             }
         });
@@ -445,12 +623,14 @@ $(function () {
     adaptScreen();
     iniChina();
     updateChinaMap();
+    updateScatter();
     updateTable();
     updateChinaChart2();
     updateChinaChart3();
 
     setInterval(function () {
         updateChinaMap();
+        updateScatter();
         updateTable();
         updateChinaChart2();
         updateChinaChart3();
