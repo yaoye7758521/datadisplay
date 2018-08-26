@@ -109,7 +109,6 @@ $(function () {
         },
         //配置属性
         series: [
-
             {
                 id: 'map',
                 name: '地区',
@@ -135,9 +134,8 @@ $(function () {
                 symbol: 'pin',
                 coordinateSystem: 'geo',
                 symbolSize: function (val) {
-                    return val[2] / 200;
+                    return val[2] / 100;
                 },
-
                 itemStyle: {
                     normal: {
                         color: '#FF4040',
@@ -171,7 +169,7 @@ $(function () {
                 },
                 zlevel: 2,
                 data: []
-            },
+            }
         ]
     }
 
@@ -483,7 +481,7 @@ $(function () {
     function getScatterData(data) {
         var gdaga = [];
         for (i = 0; i < data.length; i++) {
-            if (Number(data[i].value[2]) > scatterMax * 0.9) {
+            if (Number(data[i].value[2]) < scatterMax * 0.8) {
                 gdaga.push(data[i]);
             }
         }
@@ -493,7 +491,7 @@ $(function () {
     function getEffectScatterData(data) {
         var gdaga = [];
         for (i = 0; i < data.length; i++) {
-            if (Number(data[i].value[2]) < scatterMax * 0.9) {
+            if (Number(data[i].value[2]) > scatterMax * 0.8) {
                 gdaga.push(data[i]);
             }
         }
@@ -628,13 +626,13 @@ $(function () {
     updateChinaChart2();
     updateChinaChart3();
 
-    setInterval(function () {
-        updateChinaMap();
-        updateScatter();
-        updateTable();
-        updateChinaChart2();
-        updateChinaChart3();
-    }, 2000);
+    /* setInterval(function () {
+         updateChinaMap();
+         updateScatter();
+         updateTable();
+         updateChinaChart2();
+         updateChinaChart3();
+     }, 2000);*/
 
 
 })
