@@ -28,7 +28,6 @@ $(function () {
         tooltip: {
             trigger: 'item'
         },
-        //左侧小导航图标
         visualMap: [{
             min: minNum,
             max: maxNum,
@@ -53,10 +52,7 @@ $(function () {
                 ]
             },
             show: false
-        },
-
-
-        ],
+        }],
         geo: {
             map: area,
             zoom: dzoom,
@@ -68,7 +64,6 @@ $(function () {
             roam: false,
 
         },
-        //配置属性
         series: [
             {
                 id: 'map',
@@ -121,16 +116,18 @@ $(function () {
                 effect: {
                     show: true,
                     period: 2,
-                    trailLength: 0.5,
-                    color: ['#FF9999'],
-                    symbol: ['arrow', 'none'],
+                    trailLength: 0.3,
+                    color: ['#9933CC'],
+                    symbol: ['circle', 'none'],
                     symbolSize: 2
                 },
                 lineStyle: {
                     normal: {
-                        color: '#a6c84c',
+                        color: '#0099CC',
+                        type: 'dashed',
                         width: 0,
-                        curveness: 0.3
+                        curveness: 0.3,
+                        opacity: 1
                     }
                 },
                 data: []
@@ -363,6 +360,7 @@ $(function () {
         minNum = 0;
         maxNum = 1000;
         dzoom = 0.8;
+        updateFlag = 0;
         updateChinaMap();
         updateLines();
     }
@@ -439,31 +437,6 @@ $(function () {
         return scatterArray;
     }
 
-    function getArrayItems(arr, num) {
-        //新建一个数组,将传入的数组复制过来,用于运算,而不要直接操作传入的数组;
-        var temp_array = new Array();
-        for (var index in arr) {
-            temp_array.push(arr[index]);
-        }
-        //取出的数值项,保存在此数组
-        var return_array = new Array();
-        for (var i = 0; i < num; i++) {
-            //判断如果数组还有可以取出的元素,以防下标越界
-            if (temp_array.length > 0) {
-                //在数组中产生一个随机索引
-                var arrIndex = Math.floor(Math.random() * temp_array.length);
-                //将此随机索引的对应的数组元素值复制出来
-                return_array[i] = temp_array[arrIndex];
-                //然后删掉此索引的数组元素,这时候temp_array变为新的数组
-                temp_array.splice(arrIndex, 1);
-            } else {
-                //数组中数据项取完后,退出循环,比如数组本来只有10项,但要求取出20项.
-                break;
-            }
-        }
-        return return_array;
-    }
-
     function getLinesData(data) {
         var gdaga = [];
         for (i = 0; i < data.length * 2; i++) {
@@ -534,9 +507,10 @@ $(function () {
                 if (updateFlag === 0) {
                     linesData = ldata;
                 } else {
+                    var cdata = getArrayItems(ldata, 4)
                     for (var i = 0; i < 4; i++) {
                         linesData.shift();
-                        linesData.push(ldata[i]);
+                        linesData.push(cdata[i])
                     }
                 }
                 chinaMap.setOption({
@@ -550,6 +524,24 @@ $(function () {
                             data: getLinesData(linesData)
                         }
                     ]
+                });
+            }
+        });
+    }
+
+    function updateChinaChart1() {
+        var dataUrl = '/display/map/china';
+        $.ajax({
+            type: "get",
+            url: dataUrl,
+            async: true,
+            success: function (cdata) {
+                var data1 = getArrayItems(cdata, barNum);
+                chinaChart1.setOption({
+                    yAxis: {data: getNameArray(data1)},
+                    series: [{
+                        data: getValueArray(data1)
+                    }]
                 });
             }
         });
@@ -617,12 +609,21 @@ $(function () {
     updateChinaChart3();
 
     setInterval(function () {
+        //updateFlag = 1;
+        //updateChinaMap();
+        //updateLines();
+        updateTable();
+        updateChinaChart1();
+        updateChinaChart2();
+        updateChinaChart3();
+    }, 1000);
+    setInterval(function () {
         updateFlag = 1;
         //updateChinaMap();
         updateLines();
-        updateTable();
-        updateChinaChart2();
-        updateChinaChart3();
+        //updateTable();
+        //updateChinaChart2();
+        //updateChinaChart3();
     }, 6000);
 
 
