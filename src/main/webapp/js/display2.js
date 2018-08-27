@@ -9,6 +9,8 @@ $(function () {
     var minNum = 0;
     var maxNum = 5000;
     var scatterMax = 2000;
+    var updateFlag = 0;
+    var linesData = [];
     var chinaMap = echarts.init(document.getElementById('china'));
     var chinaChart1 = echarts.init(document.getElementById('chart1'));
     var chinaChart2 = echarts.init(document.getElementById('chart2'));
@@ -52,50 +54,9 @@ $(function () {
             },
             show: false
         },
-            {
-                min: 0,
-                max: 2000,
-                text: ['High', 'Low'],
-                realtime: false,
-                calculable: true,
-                seriesIndex: 1,
-                inRange: {
-                    color: [
-                        /* '#4575b4',
-                         '#74add1',
-                         '#abd9e9',
-                         '#e0f3f8',
-                         '#ffffbf',
-                         '#fee090',
-                         '#fdae61',
-                         '#f46d43',
-                         '#d73027',
-                         '#a50026'*/
-                        'rgba(255, 255, 255, 0.6)',
-                        'rgba(255, 200, 200, 0.8)'
-                    ]
-                },
-                show: false
-            },
-            {
-                min: 0,
-                max: 2000,
-                text: ['High', 'Low'],
-                realtime: false,
-                calculable: true,
-                seriesIndex: 2,
-                inRange: {
-                    color: [
-                        /*'#4575b4',
-                         '#74add1',
-                         '#abd9e9',
-                         '#e0f3f8',*/
-                        'rgba(255, 200, 200, 0.8)',
-                        'rgba(255, 0, 0, 1)'
-                    ]
-                },
-                show: false
-            }],
+
+
+        ],
         geo: {
             map: area,
             zoom: dzoom,
@@ -128,17 +89,23 @@ $(function () {
                 data: []
             },
             {
-                id: 'scatter',
+                id: 'effectScatter',
                 name: '被攻击',
-                type: 'scatter',
-                symbol: 'pin',
+                type: 'effectScatter',
+                symbol: 'circle',
+                showEffectOn: 'render',
                 coordinateSystem: 'geo',
+                rippleEffect: {
+                    brushType: 'stroke'
+                },
+                hoverAnimation: true,
                 symbolSize: function (val) {
-                    return val[2] / 100;
+                    return val[2] / 200;
                 },
                 itemStyle: {
                     normal: {
-                        color: '#FF4040',
+                        color: 'rgba(255, 0, 0, 0.8)',
+                        opacity: 0.5,
                         shadowBlur: 10,
                         shadowColor: '#333'
                     }
@@ -147,29 +114,27 @@ $(function () {
                 data: []
             },
             {
-                id: 'effectScatter',
-                name: '被攻击',
-                type: 'effectScatter',
-                symbol: 'pin',
-                coordinateSystem: 'geo',
-                showEffectOn: 'render',
-                rippleEffect: {
-                    brushType: 'stroke'
+                id: 'lines',
+                name: '攻击路径',
+                type: 'lines',
+                zlevel: 2,
+                effect: {
+                    show: true,
+                    period: 2,
+                    trailLength: 0.5,
+                    color: ['#FF9999'],
+                    symbol: ['arrow', 'none'],
+                    symbolSize: 2
                 },
-                hoverAnimation: true,
-                symbolSize: function (val) {
-                    return val[2] / 100;
-                },
-                itemStyle: {
+                lineStyle: {
                     normal: {
-                        color: '#FF4040',
-                        shadowBlur: 10,
-                        shadowColor: '#333'
+                        color: '#a6c84c',
+                        width: 0,
+                        curveness: 0.3
                     }
                 },
-                zlevel: 2,
                 data: []
-            }
+            },
         ]
     }
 
@@ -393,17 +358,13 @@ $(function () {
         document.getElementById("background").style.height = b + "px";
     }
 
-    function randomData() {
-        return Math.round(Math.random() * 50000);
-    }
-
     function chinaToProvince(params) {
         area = params.name;
         minNum = 0;
         maxNum = 1000;
         dzoom = 0.8;
         updateChinaMap();
-        updateScatter();
+        updateLines();
     }
 
     function provinceToChina(params) {
@@ -411,9 +372,9 @@ $(function () {
         minNum = 0;
         maxNum = 5000;
         dzoom = 1.2;
+        updateFlag = 0;
         updateChinaMap();
-        pause()
-        updateScatter();
+        updateLines();
     }
 
     function changeMap(params) {
@@ -466,7 +427,7 @@ $(function () {
         return nameArray;
     }
 
-    function paseScatterForme(data) {
+    function getScatterData(data) {
         var scatterArray = [];
         for (var i = 0; i < data.length; i++) {
             var Obj = {}
@@ -478,22 +439,40 @@ $(function () {
         return scatterArray;
     }
 
-    function getScatterData(data) {
-        var gdaga = [];
-        for (i = 0; i < data.length; i++) {
-            if (Number(data[i].value[2]) < scatterMax * 0.8) {
-                gdaga.push(data[i]);
+    function getArrayItems(arr, num) {
+        //新建一个数组,将传入的数组复制过来,用于运算,而不要直接操作传入的数组;
+        var temp_array = new Array();
+        for (var index in arr) {
+            temp_array.push(arr[index]);
+        }
+        //取出的数值项,保存在此数组
+        var return_array = new Array();
+        for (var i = 0; i < num; i++) {
+            //判断如果数组还有可以取出的元素,以防下标越界
+            if (temp_array.length > 0) {
+                //在数组中产生一个随机索引
+                var arrIndex = Math.floor(Math.random() * temp_array.length);
+                //将此随机索引的对应的数组元素值复制出来
+                return_array[i] = temp_array[arrIndex];
+                //然后删掉此索引的数组元素,这时候temp_array变为新的数组
+                temp_array.splice(arrIndex, 1);
+            } else {
+                //数组中数据项取完后,退出循环,比如数组本来只有10项,但要求取出20项.
+                break;
             }
         }
-        return gdaga;
+        return return_array;
     }
 
-    function getEffectScatterData(data) {
+    function getLinesData(data) {
         var gdaga = [];
-        for (i = 0; i < data.length; i++) {
-            if (Number(data[i].value[2]) > scatterMax * 0.8) {
-                gdaga.push(data[i]);
-            }
+        for (i = 0; i < data.length * 2; i++) {
+            var coped = getArrayItems(data, 2)
+            gdaga.push({
+                fromName: coped[0].name,
+                toName: coped[1].name,
+                coords: [[coped[0].lng, coped[0].lat], [coped[1].lng, coped[1].lat]]
+            })
         }
         return gdaga;
     }
@@ -536,10 +515,14 @@ $(function () {
         });
     }
 
-    function updateScatter() {
+    function updateLines() {
         var dataUrl;
         if (area === 'china') {
-            dataUrl = '/display/map/scatterChina?maxScaNum=' + maxScaNum + '&minScaNum=' + minScaNum;
+            if (updateFlag === 0) {
+                dataUrl = '/display/map/scatterChina?maxScaNum=' + maxScaNum + '&minScaNum=' + minScaNum;
+            } else {
+                dataUrl = '/display/map/scatterChina?maxScaNum=' + 5 + '&minScaNum=' + 4;
+            }
         } else {
             dataUrl = '/display/map/scatterProvince?province=' + encodeURI(encodeURI(area));
         }
@@ -547,17 +530,24 @@ $(function () {
             type: "get",
             url: dataUrl,
             async: true,
-            success: function (cdata) {
-                var data = paseScatterForme(cdata);
+            success: function (ldata) {
+                if (updateFlag === 0) {
+                    linesData = ldata;
+                } else {
+                    for (var i = 0; i < 4; i++) {
+                        linesData.shift();
+                        linesData.push(ldata[i]);
+                    }
+                }
                 chinaMap.setOption({
                     series: [
                         {
-                            id: 'scatter',
-                            data: getScatterData(data)
+                            id: 'effectScatter',
+                            data: getScatterData(linesData)
                         },
                         {
-                            id: 'effectScatter',
-                            data: getEffectScatterData(data)
+                            id: 'lines',
+                            data: getLinesData(linesData)
                         }
                     ]
                 });
@@ -621,18 +611,19 @@ $(function () {
     adaptScreen();
     iniChina();
     updateChinaMap();
-    updateScatter();
+    updateLines();
     updateTable();
     updateChinaChart2();
     updateChinaChart3();
 
-    /* setInterval(function () {
-         updateChinaMap();
-         updateScatter();
-         updateTable();
-         updateChinaChart2();
-         updateChinaChart3();
-     }, 2000);*/
+    setInterval(function () {
+        updateFlag = 1;
+        //updateChinaMap();
+        updateLines();
+        updateTable();
+        updateChinaChart2();
+        updateChinaChart3();
+    }, 6000);
 
 
 })
