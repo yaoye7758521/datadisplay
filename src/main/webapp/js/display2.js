@@ -439,7 +439,7 @@ $(function () {
 
     function getLinesData(data) {
         var gdaga = [];
-        for (i = 0; i < data.length * 2; i++) {
+        for (i = 0; i < data.length * 3; i++) {
             var coped = getArrayItems(data, 2)
             gdaga.push({
                 fromName: coped[0].name,
@@ -616,7 +616,7 @@ $(function () {
         updateChinaChart1();
         updateChinaChart2();
         updateChinaChart3();
-    }, 1000);
+    }, 1500);
     setInterval(function () {
         updateFlag = 1;
         //updateChinaMap();
