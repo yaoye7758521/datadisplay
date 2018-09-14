@@ -82,14 +82,14 @@
 
     <!--CONCAT(country,' ',IFNULL(state, ''),' ',city)-->
     <select id="getChinaCity" parameterType="int" resultType="String">
-        SELECT city AS srcAdd
+        SELECT CONCAT(country,'-',city) AS srcAdd
         FROM city_cn
         WHERE country = '中国'
         ORDER BY rand() LIMIT #{value};
     </select>
 
     <select id="getForeignCity" parameterType="int" resultType="String">
-        SELECT city AS srcAdd
+        SELECT CONCAT(country,'-',city) AS srcAdd
         FROM city_cn
         WHERE country != '中国'
         ORDER BY rand() LIMIT #{value};
