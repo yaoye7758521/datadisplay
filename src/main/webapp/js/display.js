@@ -482,7 +482,7 @@ $.get('/data/flights.json', function (data) {
         updatechart1();
         updatechart2();
         updatechart3();
-    }, 1500);
+    }, 6000);
 
 
 });

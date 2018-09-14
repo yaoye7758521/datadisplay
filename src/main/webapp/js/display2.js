@@ -616,7 +616,7 @@ $(function () {
         updateChinaChart1();
         updateChinaChart2();
         updateChinaChart3();
-    }, 1500);
+    }, 6000);
     setInterval(function () {
         updateFlag = 1;
         //updateChinaMap();
@@ -624,7 +624,7 @@ $(function () {
         //updateTable();
         //updateChinaChart2();
         //updateChinaChart3();
-    }, 6000);
+    }, 60000);
 
 
 })
