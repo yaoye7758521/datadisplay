@@ -31,6 +31,7 @@ public class MapService implements MapServiceInterface {
         int max = 5000;
         int min = 0;
         List<MapVo> mapVos = mapMapper.showChinaMap();
+
         for (MapVo mapVo : mapVos) {
             mapVo.setValue(getRandomNum(max, min));
         }
@@ -136,7 +137,10 @@ public class MapService implements MapServiceInterface {
     }
 
     private String getTime() {
+        Random random = new Random();
+        long timeInLong = System.currentTimeMillis();
+        long formerDate = timeInLong - 1000 * 60 * 60 * 24 * 8 + random.nextInt(1000 * 60 * 60 * 48);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return df.format(new Date());
+        return df.format(new Date(formerDate));
     }
 }

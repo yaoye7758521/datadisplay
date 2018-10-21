@@ -3,7 +3,7 @@ $(function () {
     var maxScaNum = 50;
     var minScaNum = 30;
     var rowNum = 3;
-    var barNum = 8;
+    var barNum = 10;
     var area = 'china';
     var dzoom = 1.2;
     var minNum = 0;

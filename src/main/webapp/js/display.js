@@ -3,7 +3,7 @@
  */
 $.get('/data/flights.json', function (data) {
     var rowNum = 3;
-    var barNum = 8;
+    var barNum = 10;
     var myChart1 = echarts.init(document.getElementById('chart1'));
     var myChart2 = echarts.init(document.getElementById('chart2'));
     var myChart3 = echarts.init(document.getElementById('chart3'));
