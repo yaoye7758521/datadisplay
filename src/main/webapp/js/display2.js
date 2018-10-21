@@ -410,6 +410,7 @@ $(function () {
     }
 
     function getValueArray(sdata) {
+
         var valueArray = [];
         for (var i = 0; i < sdata.length; i++) {
             valueArray.push(sdata[i].value)
