@@ -359,7 +359,7 @@ $.get('/data/flights.json', function (data) {
     };
 
 
-    function getArrayItems(arr, num) {
+ /*   function getArrayItems(arr, num) {
         var temp_array = [];
         for (var index in arr) {
             temp_array.push(arr[index]);
@@ -375,6 +375,40 @@ $.get('/data/flights.json', function (data) {
             }
         }
         return return_array;
+    }*/
+
+    function getArrayItems(arr, num) {
+        var temp_array = [];
+        var return_array = [];
+        for (var i in arr) {
+            temp_array.push(arr[i])
+        }
+        for (var j in temp_array) {
+            if (arr[j].name = '湖北') {
+                arr[j].weight = Math.floor(Math.random() * 10) * 2
+            } else {
+                arr[j].weight = Math.floor(Math.random() * 10)
+            }
+        }
+        bubbleSort(temp_array);
+        for (var k = 0; k < num; k++) {
+            return_array.push(temp_array[k])
+        }
+        return return_array;
+    }
+
+    function bubbleSort(arr) {
+        var len = arr.length;
+        for (var i = 0; i < len; i++) {
+            for (var j = 0; j < len - 1 - i; j++) {
+                if (arr[j].weight < arr[j + 1].weight) { //相邻元素两两对比
+                    var temp = arr[j + 1]; //元素交换
+                    arr[j + 1] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+        return arr;
     }
 
     function getValueArray(sdata) {

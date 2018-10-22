@@ -393,20 +393,36 @@ $(function () {
 
     function getArrayItems(arr, num) {
         var temp_array = [];
-        for (var index in arr) {
-            temp_array.push(arr[index]);
-        }
         var return_array = [];
-        for (var i = 0; i < num; i++) {
-            if (temp_array.length > 0) {
-                var arrIndex = Math.floor(Math.random() * temp_array.length);
-                return_array[i] = temp_array[arrIndex];
-                temp_array.splice(arrIndex, 1);
+        for (var i in arr) {
+            temp_array.push(arr[i])
+        }
+        for (var j in temp_array) {
+            if (temp_array[j].name === '湖北') {
+                temp_array[j].weight = Math.random() * 10 * 1.6
             } else {
-                break;
+                temp_array[j].weight = Math.random() * 10
             }
         }
+        bubbleSort(temp_array);
+        for (var k = 0; k < num; k++) {
+            return_array.push(temp_array[k])
+        }
         return return_array;
+    }
+
+    function bubbleSort(arr) {
+        var len = arr.length;
+        for (var i = 0; i < len; i++) {
+            for (var j = 0; j < len - 1 - i; j++) {
+                if (arr[j].weight < arr[j + 1].weight) { //相邻元素两两对比
+                    var temp = arr[j + 1]; //元素交换
+                    arr[j + 1] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+        }
+        return arr;
     }
 
     function getValueArray(sdata) {
